@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ICF-SL Advanced Period Column Splitter</title>
+    <title>ICF-SL Period Column Splitter - Month & Year</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -390,6 +390,44 @@
             100% { transform: rotate(360deg); }
         }
 
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 2px solid #004080;
+        }
+
+        .feature-card h4 {
+            color: #004080;
+            margin-bottom: 1rem;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .feature-card ul {
+            color: #000000;
+            line-height: 1.8;
+            padding-left: 1.5rem;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .feature-card strong {
+            color: #004080;
+        }
+
         .page-footer {
             background-color: #004080;
             color: #ffffff;
@@ -516,27 +554,6 @@
             color: #721c24;
         }
 
-        .badge-format {
-            background: #e7f3ff;
-            color: #004080;
-            font-size: 9px;
-            padding: 2px 6px;
-            margin-left: 5px;
-        }
-
-        .detection-info {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            border-radius: 6px;
-            padding: 1rem;
-            margin: 1rem 0;
-        }
-
-        .detection-info h5 {
-            color: #856404;
-            margin-bottom: 0.5rem;
-        }
-
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -581,8 +598,8 @@
             </div>
             <h3>Informatics Consultancy Firm-Sierra Leone<br>(ICF-SL)</h3>
             <p class="tagline"><em>Driving Data-Driven Solutions for Health and Development</em></p>
-            <h1>ADVANCED PERIOD COLUMN SPLITTER</h1>
-            <p class="subtitle">Universal Date Parser | Extract Month (01-12) and Year from ANY Date Format</p>
+            <h1>PERIOD COLUMN SPLITTER</h1>
+            <p class="subtitle">Split Period Column into Separate Month (01-12) and Year Columns</p>
         </div>
 
         <div class="content-card">
@@ -595,7 +612,7 @@
                 <div id="uploadSection">
                     <div class="upload-section">
                         <h3>📁 UPLOAD YOUR DATA FILE</h3>
-                        <p>Upload a CSV or Excel file containing date/period columns to split</p>
+                        <p>Upload a CSV or Excel file containing a period/date column to split</p>
                         <label class="file-input-wrapper">
                             Choose Data File
                             <input type="file" id="dataFileInput" accept=".csv,.xlsx,.xls">
@@ -610,18 +627,18 @@
 
                     <!-- Supported Formats -->
                     <div class="config-card">
-                        <h4>✓ Supported Date/Period Formats (Auto-Detected)</h4>
+                        <h4>✓ Supported Period Formats (Auto-Detected)</h4>
                         
                         <div class="format-category">
                             <h5>📅 Text Month Formats</h5>
                             <div class="format-examples">
                                 <span class="format-tag">January 2024</span>
                                 <span class="format-tag">Jan 2024</span>
-                                <span class="format-tag">JANUARY 2024</span>
                                 <span class="format-tag">Feb-2024</span>
                                 <span class="format-tag">2024-March</span>
                                 <span class="format-tag">Dec/2023</span>
-                                <span class="format-tag">Sept 2023</span>
+                                <span class="format-tag">APRIL 2024</span>
+                                <span class="format-tag">Sept-2023</span>
                             </div>
                         </div>
 
@@ -633,7 +650,6 @@
                                 <span class="format-tag numeric">2024/01</span>
                                 <span class="format-tag numeric">01-2024</span>
                                 <span class="format-tag numeric">1/2024</span>
-                                <span class="format-tag numeric">2024.01</span>
                             </div>
                         </div>
 
@@ -645,7 +661,6 @@
                                 <span class="format-tag iso">01/15/2024</span>
                                 <span class="format-tag iso">2024/01/15</span>
                                 <span class="format-tag iso">15-Jan-2024</span>
-                                <span class="format-tag iso">January 15, 2024</span>
                             </div>
                         </div>
 
@@ -653,12 +668,50 @@
                             <h5>🖥️ Special Formats</h5>
                             <div class="format-examples">
                                 <span class="format-tag excel">44927 (Excel Serial)</span>
-                                <span class="format-tag iso">2024-01-15T10:30:00</span>
-                                <span class="format-tag iso">20240115</span>
+                                <span class="format-tag iso">20240115 (Compact)</span>
+                                <span class="format-tag numeric">202403 (YYYYMM)</span>
                                 <span class="format-tag">Q1 2024 → 01</span>
-                                <span class="format-tag">2024-Q2 → 04</span>
-                                <span class="format-tag">FY2024 → 2024</span>
+                                <span class="format-tag">Q2 2024 → 04</span>
                             </div>
+                        </div>
+
+                        <p style="color: #666; font-size: 13px; margin-top: 10px;">
+                            <strong>Logic:</strong> Extracts 4-digit year (19xx or 20xx) and month (from text names or numbers 1-12). Day is ignored if present.
+                        </p>
+                    </div>
+
+                    <!-- Features Section -->
+                    <div class="section-header">
+                        <span class="section-icon">?</span>
+                        <span class="section-title">HOW IT WORKS</span>
+                    </div>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4>Step 1: Upload</h4>
+                            <ul>
+                                <li>Upload CSV or Excel file</li>
+                                <li>File is parsed automatically</li>
+                                <li>All columns are detected</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <h4>Step 2: Select Column</h4>
+                            <ul>
+                                <li>Choose the period column</li>
+                                <li>Preview sample values</li>
+                                <li>Verify correct column selected</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <h4>Step 3: Process & Export</h4>
+                            <ul>
+                                <li>Split into Month & Year</li>
+                                <li>View results in table</li>
+                                <li>Download as Excel or CSV</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -670,6 +723,13 @@
                         <span class="section-title">SELECT PERIOD COLUMN</span>
                     </div>
 
+                    <!-- Auto-detection notice -->
+                    <div id="autoDetectNotice" class="hidden" style="background: #d4edda; border: 2px solid #28a745; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;">
+                        <strong style="color: #155724;">🔍 Auto-Detected:</strong> 
+                        <span id="autoDetectColumn" style="color: #155724;"></span>
+                        <span style="color: #155724; font-size: 13px;"> — Change manually below if incorrect.</span>
+                    </div>
+
                     <div class="config-card">
                         <h4>Column Selection</h4>
                         <div class="form-row">
@@ -678,20 +738,14 @@
                                 <select id="periodColumn" class="form-control" onchange="previewColumnValues()">
                                     <option value="">-- Select Column --</option>
                                 </select>
-                                <small style="color: #666; font-size: 12px;">Select the column containing date/period values</small>
+                                <small style="color: #666; font-size: 12px;">The tool analyzes your data to auto-detect date columns. Select manually if needed.</small>
                             </div>
                         </div>
                         
                         <!-- Column Preview -->
                         <div id="columnPreview" class="hidden" style="margin-top: 1rem;">
-                            <h4 style="color: #004080; margin-bottom: 0.5rem;">Sample Values & Detection:</h4>
-                            <div id="sampleValues" style="background: #e7f3ff; padding: 1rem; border-radius: 6px;"></div>
-                        </div>
-
-                        <!-- Auto-detected format info -->
-                        <div id="formatDetection" class="detection-info hidden">
-                            <h5>🔍 Auto-Detected Format Pattern</h5>
-                            <p id="detectedFormatInfo"></p>
+                            <h4 style="color: #004080; margin-bottom: 0.5rem;">Sample Values from Selected Column:</h4>
+                            <div id="sampleValues" style="background: #e7f3ff; padding: 1rem; border-radius: 6px; font-family: monospace;"></div>
                         </div>
                     </div>
 
@@ -707,30 +761,16 @@
                                 <input type="text" id="yearColumnName" class="form-control" value="Year" placeholder="Year">
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="dayColumnName">New Day Column Name (Optional)</label>
-                                <input type="text" id="dayColumnName" class="form-control" value="" placeholder="Leave empty to skip day extraction">
-                            </div>
-                            <div class="form-group">
-                                <label for="dateFormat">Ambiguous Date Handling (DD/MM vs MM/DD)</label>
-                                <select id="dateFormat" class="form-control">
-                                    <option value="auto">Auto-detect</option>
-                                    <option value="dmy">Day/Month/Year (European: 15/01/2024)</option>
-                                    <option value="mdy">Month/Day/Year (US: 01/15/2024)</option>
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="createYearMonth" checked style="margin-right: 8px; accent-color: #004080;">
+                                Also create Year_Month column (YYYY-MM format)
+                            </label>
                         </div>
                         <div class="form-group">
                             <label>
                                 <input type="checkbox" id="keepOriginal" checked style="margin-right: 8px; accent-color: #004080;">
                                 Keep original period column in output
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="createYearMonth" style="margin-right: 8px; accent-color: #004080;">
-                                Also create Year_Month column (YYYY-MM format)
                             </label>
                         </div>
                     </div>
@@ -749,7 +789,7 @@
                     </div>
                     <div class="config-card" style="text-align: center;">
                         <div class="loading-spinner"></div>
-                        <p style="margin-top: 1rem; font-weight: 700; color: #004080;">Parsing dates and splitting columns...</p>
+                        <p style="margin-top: 1rem; font-weight: 700; color: #004080;">Splitting period column...</p>
                     </div>
                 </div>
 
@@ -762,12 +802,6 @@
 
                     <div class="stats-grid" id="summaryStats">
                         <!-- Populated dynamically -->
-                    </div>
-
-                    <!-- Format breakdown -->
-                    <div id="formatBreakdown" class="config-card">
-                        <h4>📊 Format Detection Breakdown</h4>
-                        <div id="formatStats"></div>
                     </div>
 
                     <!-- Results Table -->
@@ -805,9 +839,8 @@
         let processedData = null;
         let availableColumns = [];
         let fileName = '';
-        let formatCounts = {};
 
-        // Comprehensive month mapping
+        // Comprehensive month mapping - handles various formats
         const monthMap = {
             // Full names
             'january': 1, 'february': 2, 'march': 3, 'april': 4,
@@ -818,21 +851,7 @@
             'jun': 6, 'jul': 7, 'aug': 8,
             'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12,
             // Additional variations
-            'sept': 9, 'sept.': 9,
-            // Spanish
-            'enero': 1, 'febrero': 2, 'marzo': 3, 'abril': 4,
-            'mayo': 5, 'junio': 6, 'julio': 7, 'agosto': 8,
-            'septiembre': 9, 'octubre': 10, 'noviembre': 11, 'diciembre': 12,
-            // French
-            'janvier': 1, 'février': 2, 'fevrier': 2, 'mars': 3, 'avril': 4,
-            'mai': 5, 'juin': 6, 'juillet': 7, 'août': 8, 'aout': 8,
-            'septembre': 9, 'octobre': 10, 'novembre': 11, 'décembre': 12, 'decembre': 12
-        };
-
-        // Quarter to month mapping (first month of quarter)
-        const quarterMap = {
-            'q1': 1, 'q2': 4, 'q3': 7, 'q4': 10,
-            '1q': 1, '2q': 4, '3q': 7, '4q': 10
+            'sept': 9
         };
 
         // Initialize event listeners
@@ -886,9 +905,9 @@
                 reader.onload = function(e) {
                     try {
                         const data = new Uint8Array(e.target.result);
-                        const workbook = XLSX.read(data, {type: 'array', cellDates: true});
+                        const workbook = XLSX.read(data, {type: 'array'});
                         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                        rawData = XLSX.utils.sheet_to_json(firstSheet, {raw: false, dateNF: 'yyyy-mm-dd'});
+                        rawData = XLSX.utils.sheet_to_json(firstSheet, {raw: false});
                         availableColumns = Object.keys(rawData[0] || {});
                         document.getElementById('dataFileName').textContent = `✓ Loaded: ${fileName} (${rawData.length} rows, ${availableColumns.length} columns)`;
                         document.getElementById('uploadProgress').classList.add('hidden');
@@ -909,7 +928,7 @@
             populateColumnSelector();
             document.getElementById('uploadSection').classList.add('hidden');
             document.getElementById('configSection').classList.remove('hidden');
-            showAlert(`File loaded successfully! Select the date/period column to split.`, 'success');
+            showAlert(`File loaded successfully with ${rawData.length} rows.`, 'success');
         }
 
         function populateColumnSelector() {
@@ -920,50 +939,105 @@
                 select.innerHTML += `<option value="${col}">${col}</option>`;
             });
 
-            // Auto-select if column name matches common patterns
-            const periodPatterns = ['period', 'date', 'month', 'time', 'reporting', 'year_month', 'yearmonth', 'dt', 'fecha'];
+            // Smart auto-detection: analyze column names AND data content
+            const detectedColumn = autoDetectDateColumn();
+            const noticeDiv = document.getElementById('autoDetectNotice');
+            const noticeColumn = document.getElementById('autoDetectColumn');
+            
+            if (detectedColumn) {
+                select.value = detectedColumn;
+                noticeColumn.textContent = `"${detectedColumn}"`;
+                noticeDiv.classList.remove('hidden');
+                previewColumnValues();
+            } else {
+                noticeDiv.classList.add('hidden');
+                showAlert('Could not auto-detect date column. Please select manually.', 'info');
+            }
+        }
+
+        /**
+         * Smart auto-detection of date columns
+         * Analyzes both column names and actual data content
+         */
+        function autoDetectDateColumn() {
+            let bestColumn = null;
+            let bestScore = 0;
+
             availableColumns.forEach(col => {
+                let score = 0;
                 const colLower = col.toLowerCase();
-                if (periodPatterns.some(p => colLower.includes(p))) {
-                    select.value = col;
-                    previewColumnValues();
+
+                // Score based on column name (0-50 points)
+                const exactMatches = ['period', 'date', 'month', 'year_month', 'yearmonth', 'reporting_period', 'report_date'];
+                const partialMatches = ['time', 'reporting', 'dt', 'fecha', 'datum', 'mois', 'año', 'anno'];
+                
+                if (exactMatches.some(p => colLower === p || colLower.replace(/[_\s-]/g, '') === p)) {
+                    score += 50;
+                } else if (exactMatches.some(p => colLower.includes(p))) {
+                    score += 40;
+                } else if (partialMatches.some(p => colLower.includes(p))) {
+                    score += 25;
+                }
+
+                // Score based on data content (0-50 points)
+                // Sample up to 20 values from the column
+                const sampleValues = rawData
+                    .slice(0, Math.min(100, rawData.length))
+                    .map(row => row[col])
+                    .filter(v => v !== null && v !== undefined && String(v).trim() !== '')
+                    .slice(0, 20);
+
+                if (sampleValues.length > 0) {
+                    let validDateCount = 0;
+                    sampleValues.forEach(val => {
+                        const result = extractMonthYear(val);
+                        if (result.year && result.month) {
+                            validDateCount++;
+                        }
+                    });
+
+                    const validRatio = validDateCount / sampleValues.length;
+                    score += Math.round(validRatio * 50);
+                }
+
+                // Update best match
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestColumn = col;
                 }
             });
+
+            // Only return if we have a reasonable confidence (score >= 40)
+            return bestScore >= 40 ? bestColumn : null;
         }
 
         function previewColumnValues() {
             const periodCol = document.getElementById('periodColumn').value;
             const previewDiv = document.getElementById('columnPreview');
             const sampleDiv = document.getElementById('sampleValues');
-            const formatDiv = document.getElementById('formatDetection');
 
             if (!periodCol) {
                 previewDiv.classList.add('hidden');
-                formatDiv.classList.add('hidden');
                 return;
             }
 
-            // Get unique sample values (up to 15)
-            const uniqueValues = [...new Set(rawData.map(row => row[periodCol]).filter(v => v !== null && v !== undefined && String(v).trim() !== ''))].slice(0, 15);
+            // Get unique sample values (up to 10)
+            const uniqueValues = [...new Set(rawData.map(row => row[periodCol]).filter(v => v !== null && v !== undefined && String(v).trim() !== ''))].slice(0, 10);
             
             let html = '<div style="display: flex; flex-wrap: wrap; gap: 10px;">';
-            const detectedFormats = {};
-            
             uniqueValues.forEach(val => {
-                const result = parseDate(val, 'auto');
-                const statusClass = result.error ? 'badge-error' : 'badge-success';
-                const statusText = result.error ? `Error` : `${result.month.toString().padStart(2, '0')}/${result.year}`;
-                
-                if (!result.error && result.format) {
-                    detectedFormats[result.format] = (detectedFormats[result.format] || 0) + 1;
-                }
+                const result = extractMonthYear(val);
+                const hasYear = result.year !== null;
+                const hasMonth = result.month !== null;
+                const statusClass = (hasYear && hasMonth) ? 'badge-success' : 'badge-error';
+                const statusText = (hasYear && hasMonth) 
+                    ? `→ ${String(result.month).padStart(2, '0')}/${result.year}` 
+                    : (hasYear ? `→ Year: ${result.year}` : 'Error');
                 
                 html += `
-                    <div style="background: #fff; padding: 8px 12px; border-radius: 6px; border: 1px solid #ddd; min-width: 120px;">
-                        <div style="font-family: monospace; font-size: 12px; margin-bottom: 4px; word-break: break-all;">${val}</div>
+                    <div style="background: #fff; padding: 8px 12px; border-radius: 6px; border: 1px solid #ddd;">
+                        <strong>${val}</strong><br>
                         <span class="preview-badge ${statusClass}">${statusText}</span>
-                        ${result.format ? `<span class="preview-badge badge-format">${result.format}</span>` : ''}
-                        ${result.error ? `<div style="font-size: 10px; color: #dc3545; margin-top: 3px;">${result.error}</div>` : ''}
                     </div>
                 `;
             });
@@ -971,322 +1045,169 @@
             
             sampleDiv.innerHTML = html;
             previewDiv.classList.remove('hidden');
-
-            // Show detected format info
-            if (Object.keys(detectedFormats).length > 0) {
-                const topFormat = Object.entries(detectedFormats).sort((a, b) => b[1] - a[1])[0][0];
-                document.getElementById('detectedFormatInfo').innerHTML = `
-                    Primary format detected: <strong>${topFormat}</strong><br>
-                    <small>Formats found: ${Object.entries(detectedFormats).map(([f, c]) => `${f} (${c})`).join(', ')}</small>
-                `;
-                formatDiv.classList.remove('hidden');
-            } else {
-                formatDiv.classList.add('hidden');
-            }
         }
 
         /**
-         * Universal date parser - handles all common date formats
+         * ROBUST: Extract Month and Year from ANY date format
          */
-        function parseDate(value, dateFormatHint = 'auto') {
-            if (value === null || value === undefined) {
-                return { year: null, month: null, day: null, error: 'Empty value', format: null };
+        function extractMonthYear(value) {
+            if (value === null || value === undefined || String(value).trim() === '') {
+                return { month: null, year: null, error: 'Empty value' };
             }
 
             const original = String(value).trim();
-            if (original === '') {
-                return { year: null, month: null, day: null, error: 'Empty value', format: null };
-            }
-
             const text = original.toLowerCase();
+            let year = null;
+            let month = null;
 
-            // Try each parser in order
-            let result;
-
-            // 1. Check for Excel serial date (pure number between 1 and 100000)
-            result = tryExcelSerial(original);
-            if (result) return result;
-
-            // 2. Check for ISO 8601 format (2024-01-15 or 2024-01-15T10:30:00)
-            result = tryISOFormat(original);
-            if (result) return result;
-
-            // 3. Check for compact format (20240115)
-            result = tryCompactFormat(original);
-            if (result) return result;
-
-            // 4. Check for YYYY-MM or MM-YYYY format (year-month only)
-            result = tryYearMonthFormat(original);
-            if (result) return result;
-
-            // 5. Check for quarter format (Q1 2024, 2024-Q2)
-            result = tryQuarterFormat(text, original);
-            if (result) return result;
-
-            // 6. Check for text month formats (January 2024, Jan-2024, 2024-March)
-            result = tryTextMonthFormat(text, original);
-            if (result) return result;
-
-            // 7. Check for numeric date formats (DD/MM/YYYY, MM/DD/YYYY, YYYY/MM/DD)
-            result = tryNumericDateFormat(original, dateFormatHint);
-            if (result) return result;
-
-            // 8. Check for fiscal year format (FY2024, FY24)
-            result = tryFiscalYearFormat(text, original);
-            if (result) return result;
-
-            // 9. Last resort - try to extract any year
-            result = tryExtractYear(original);
-            if (result) return result;
-
-            return { year: null, month: null, day: null, error: 'Unrecognized format', format: null };
-        }
-
-        function tryExcelSerial(value) {
-            const num = parseFloat(value);
-            if (!isNaN(num) && num > 0 && num < 2958466 && String(value).match(/^\d+\.?\d*$/)) {
-                // Excel serial date (days since 1900-01-01, with Excel bug for 1900)
-                // Only treat as Excel date if it's a reasonable range
-                if (num > 365 && num < 100000) {
+            // 1. Handle Excel serial date (pure number like 44927)
+            if (/^\d+$/.test(original)) {
+                const num = parseInt(original);
+                if (num > 1000 && num < 100000) {
                     const date = new Date((num - 25569) * 86400 * 1000);
                     if (!isNaN(date.getTime())) {
-                        return {
-                            year: date.getFullYear(),
-                            month: date.getMonth() + 1,
-                            day: date.getDate(),
-                            error: null,
-                            format: 'Excel Serial'
+                        return { 
+                            month: date.getMonth() + 1, 
+                            year: date.getFullYear(), 
+                            error: null 
                         };
                     }
                 }
             }
-            return null;
-        }
 
-        function tryISOFormat(value) {
-            // ISO 8601: 2024-01-15 or 2024-01-15T10:30:00 or 2024/01/15
-            const isoMatch = value.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})(?:T|\s|$)/);
-            if (isoMatch) {
-                const year = parseInt(isoMatch[1]);
-                const month = parseInt(isoMatch[2]);
-                const day = parseInt(isoMatch[3]);
-                if (year >= 1900 && year <= 2100 && month >= 1 && month <= 12 && day >= 1 && day <= 31) {
-                    return { year, month, day, error: null, format: 'ISO (YYYY-MM-DD)' };
-                }
-            }
-            return null;
-        }
-
-        function tryCompactFormat(value) {
-            // Compact: 20240115
-            const compactMatch = value.match(/^(\d{4})(\d{2})(\d{2})$/);
-            if (compactMatch) {
-                const year = parseInt(compactMatch[1]);
-                const month = parseInt(compactMatch[2]);
-                const day = parseInt(compactMatch[3]);
-                if (year >= 1900 && year <= 2100 && month >= 1 && month <= 12 && day >= 1 && day <= 31) {
-                    return { year, month, day, error: null, format: 'Compact (YYYYMMDD)' };
-                }
-            }
-            return null;
-        }
-
-        function tryYearMonthFormat(value) {
-            // YYYY-MM or YYYY/MM or YYYY.MM
-            let match = value.match(/^(\d{4})[-\/\.](\d{1,2})$/);
-            if (match) {
-                const year = parseInt(match[1]);
-                const month = parseInt(match[2]);
-                if (year >= 1900 && year <= 2100 && month >= 1 && month <= 12) {
-                    return { year, month, day: null, error: null, format: 'YYYY-MM' };
-                }
+            // 2. Extract 4-digit year (19xx or 20xx)
+            const yearMatch = original.match(/(19|20)\d{2}/);
+            if (yearMatch) {
+                year = parseInt(yearMatch[0]);
             }
 
-            // MM-YYYY or MM/YYYY or MM.YYYY
-            match = value.match(/^(\d{1,2})[-\/\.](\d{4})$/);
-            if (match) {
-                const month = parseInt(match[1]);
-                const year = parseInt(match[2]);
-                if (year >= 1900 && year <= 2100 && month >= 1 && month <= 12) {
-                    return { year, month, day: null, error: null, format: 'MM-YYYY' };
-                }
-            }
-
-            return null;
-        }
-
-        function tryQuarterFormat(text, original) {
-            // Q1 2024, 2024 Q1, 2024-Q1, Q1-2024
-            for (const [qKey, qMonth] of Object.entries(quarterMap)) {
-                if (text.includes(qKey)) {
-                    const yearMatch = original.match(/\b(19|20)\d{2}\b/);
-                    if (yearMatch) {
-                        return {
-                            year: parseInt(yearMatch[0]),
-                            month: qMonth,
-                            day: null,
-                            error: null,
-                            format: `Quarter (${qKey.toUpperCase()})`
-                        };
-                    }
-                }
-            }
-            return null;
-        }
-
-        function tryTextMonthFormat(text, original) {
-            // Find month name in text
-            let foundMonth = null;
-            let foundMonthKey = null;
-            
-            // Sort by length descending to match longer names first (e.g., "september" before "sep")
-            const sortedMonths = Object.entries(monthMap).sort((a, b) => b[0].length - a[0].length);
-            
-            for (const [monthName, monthNum] of sortedMonths) {
-                // Use word boundary to avoid partial matches
-                const regex = new RegExp(`\\b${monthName}\\b`, 'i');
-                if (regex.test(text)) {
-                    foundMonth = monthNum;
-                    foundMonthKey = monthName;
+            // 3. Try to find text month name (check longest matches first)
+            const sortedMonths = Object.keys(monthMap).sort((a, b) => b.length - a.length);
+            for (const monthName of sortedMonths) {
+                if (text.includes(monthName)) {
+                    month = monthMap[monthName];
                     break;
                 }
             }
 
-            if (foundMonth) {
-                // Extract year
-                const yearMatch = original.match(/\b(19|20)\d{2}\b/);
-                if (yearMatch) {
-                    // Try to extract day if present
-                    let day = null;
-                    const dayMatch = original.match(/\b([0-3]?\d)(?:st|nd|rd|th)?\b/);
-                    if (dayMatch) {
-                        const potentialDay = parseInt(dayMatch[1]);
-                        if (potentialDay >= 1 && potentialDay <= 31 && potentialDay !== parseInt(yearMatch[0])) {
-                            day = potentialDay;
+            // 4. If no text month found, try numeric patterns
+            if (month === null) {
+                // Pattern: YYYY-MM or YYYY/MM or YYYY.MM (year first, then month)
+                let match = original.match(/(19|20)\d{2}[-\/\.](\d{1,2})(?!\d)/);
+                if (match) {
+                    const m = parseInt(match[2]);
+                    if (m >= 1 && m <= 12) {
+                        month = m;
+                    }
+                }
+
+                // Pattern: MM-YYYY or MM/YYYY or MM.YYYY (month first, then year)
+                if (month === null) {
+                    match = original.match(/^(\d{1,2})[-\/\.](19|20)\d{2}/);
+                    if (match) {
+                        const m = parseInt(match[1]);
+                        if (m >= 1 && m <= 12) {
+                            month = m;
                         }
                     }
-
-                    return {
-                        year: parseInt(yearMatch[0]),
-                        month: foundMonth,
-                        day: day,
-                        error: null,
-                        format: 'Text Month'
-                    };
                 }
-            }
 
-            return null;
-        }
-
-        function tryNumericDateFormat(value, hint) {
-            // Various numeric formats: DD/MM/YYYY, MM/DD/YYYY, DD-MM-YYYY, etc.
-            const separators = /[-\/\.\s]+/;
-            const parts = value.split(separators).filter(p => p.match(/^\d+$/));
-
-            if (parts.length < 2) return null;
-
-            let year, month, day;
-
-            if (parts.length === 3) {
-                const nums = parts.map(p => parseInt(p));
-                
-                // YYYY-MM-DD or YYYY/MM/DD
-                if (nums[0] >= 1900 && nums[0] <= 2100) {
-                    year = nums[0];
-                    month = nums[1];
-                    day = nums[2];
-                    if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
-                        return { year, month, day, error: null, format: 'YYYY-MM-DD' };
+                // Pattern: Full date with 3 numeric parts
+                if (month === null) {
+                    const parts = original.split(/[-\/\.\s]+/).filter(p => /^\d+$/.test(p)).map(Number);
+                    if (parts.length >= 3) {
+                        // YYYY-MM-DD format
+                        if (parts[0] >= 1900 && parts[0] <= 2100) {
+                            year = parts[0];
+                            if (parts[1] >= 1 && parts[1] <= 12) {
+                                month = parts[1];
+                            }
+                        }
+                        // DD/MM/YYYY or MM/DD/YYYY format
+                        else if (parts[2] >= 1900 && parts[2] <= 2100) {
+                            year = parts[2];
+                            // If first number > 12, it must be day, so second is month (DD/MM/YYYY)
+                            if (parts[0] > 12 && parts[1] <= 12) {
+                                month = parts[1];
+                            }
+                            // If second number > 12, first must be month (MM/DD/YYYY)
+                            else if (parts[1] > 12 && parts[0] <= 12) {
+                                month = parts[0];
+                            }
+                            // Ambiguous - default to DD/MM/YYYY (international standard)
+                            else if (parts[1] <= 12) {
+                                month = parts[1];
+                            }
+                            else if (parts[0] <= 12) {
+                                month = parts[0];
+                            }
+                        }
                     }
                 }
 
-                // DD/MM/YYYY or MM/DD/YYYY
-                if (nums[2] >= 1900 && nums[2] <= 2100) {
-                    year = nums[2];
-                    
-                    // Determine if DD/MM or MM/DD
-                    if (hint === 'dmy' || (hint === 'auto' && nums[0] > 12 && nums[1] <= 12)) {
-                        // DD/MM/YYYY
-                        day = nums[0];
-                        month = nums[1];
-                    } else if (hint === 'mdy' || (hint === 'auto' && nums[1] > 12 && nums[0] <= 12)) {
-                        // MM/DD/YYYY
-                        month = nums[0];
-                        day = nums[1];
-                    } else {
-                        // Ambiguous - default to DD/MM/YYYY (more common internationally)
-                        day = nums[0];
-                        month = nums[1];
-                    }
-
-                    if (month >= 1 && month <= 12) {
-                        return { year, month, day, error: null, format: nums[0] > 12 ? 'DD/MM/YYYY' : (nums[1] > 12 ? 'MM/DD/YYYY' : 'Numeric Date') };
+                // Pattern: Compact YYYYMM (6 digits like 202403)
+                if (month === null) {
+                    const yyyymmMatch = original.match(/^(19|20)(\d{2})(\d{2})$/);
+                    if (yyyymmMatch) {
+                        year = parseInt(yyyymmMatch[1] + yyyymmMatch[2]);
+                        const m = parseInt(yyyymmMatch[3]);
+                        if (m >= 1 && m <= 12) {
+                            month = m;
+                        }
                     }
                 }
 
-                // YY-MM-DD (2-digit year)
-                if (nums[0] < 100 && nums[1] <= 12 && nums[2] <= 31) {
-                    year = nums[0] < 50 ? 2000 + nums[0] : 1900 + nums[0];
-                    month = nums[1];
-                    day = nums[2];
-                    return { year, month, day, error: null, format: 'YY-MM-DD' };
+                // Pattern: Compact YYYYMMDD (8 digits)
+                if (month === null) {
+                    const compactMatch = original.match(/^(19|20)(\d{2})(\d{2})(\d{2})$/);
+                    if (compactMatch) {
+                        year = parseInt(compactMatch[1] + compactMatch[2]);
+                        const m = parseInt(compactMatch[3]);
+                        if (m >= 1 && m <= 12) {
+                            month = m;
+                        }
+                    }
+                }
+
+                // Pattern: Quarter (Q1, Q2, Q3, Q4)
+                if (month === null) {
+                    if (text.includes('q1')) month = 1;
+                    else if (text.includes('q2')) month = 4;
+                    else if (text.includes('q3')) month = 7;
+                    else if (text.includes('q4')) month = 10;
                 }
             }
 
-            if (parts.length === 2) {
-                const nums = parts.map(p => parseInt(p));
-                
-                // Already handled by tryYearMonthFormat, but check again
-                if (nums[0] >= 1900 && nums[0] <= 2100 && nums[1] >= 1 && nums[1] <= 12) {
-                    return { year: nums[0], month: nums[1], day: null, error: null, format: 'YYYY-MM' };
-                }
-                if (nums[1] >= 1900 && nums[1] <= 2100 && nums[0] >= 1 && nums[0] <= 12) {
-                    return { year: nums[1], month: nums[0], day: null, error: null, format: 'MM-YYYY' };
+            // 5. If still no year, try 2-digit year
+            if (year === null) {
+                const twoDigitYear = original.match(/\b(\d{2})\b/);
+                if (twoDigitYear) {
+                    const y = parseInt(twoDigitYear[1]);
+                    if (y >= 0 && y <= 99) {
+                        year = y < 50 ? 2000 + y : 1900 + y;
+                    }
                 }
             }
 
-            return null;
-        }
-
-        function tryFiscalYearFormat(text, original) {
-            // FY2024, FY24, FY 2024
-            const fyMatch = text.match(/fy\s*(\d{2,4})/);
-            if (fyMatch) {
-                let year = parseInt(fyMatch[1]);
-                if (year < 100) {
-                    year = year < 50 ? 2000 + year : 1900 + year;
-                }
-                if (year >= 1900 && year <= 2100) {
-                    return { year, month: null, day: null, error: null, format: 'Fiscal Year' };
-                }
+            // Determine error status
+            let error = null;
+            if (year === null && month === null) {
+                error = 'Cannot parse';
+            } else if (year === null) {
+                error = 'No year found';
+            } else if (month === null) {
+                error = 'No month found';
             }
-            return null;
-        }
 
-        function tryExtractYear(value) {
-            // Last resort - just extract a 4-digit year
-            const yearMatch = value.match(/\b(19|20)\d{2}\b/);
-            if (yearMatch) {
-                return {
-                    year: parseInt(yearMatch[0]),
-                    month: null,
-                    day: null,
-                    error: 'Only year extracted',
-                    format: 'Year Only'
-                };
-            }
-            return null;
+            return { month, year, error };
         }
 
         function processData() {
             const periodCol = document.getElementById('periodColumn').value;
             const monthColName = document.getElementById('monthColumnName').value || 'Month';
             const yearColName = document.getElementById('yearColumnName').value || 'Year';
-            const dayColName = document.getElementById('dayColumnName').value;
-            const dateFormatHint = document.getElementById('dateFormat').value;
-            const keepOriginal = document.getElementById('keepOriginal').checked;
             const createYearMonth = document.getElementById('createYearMonth').checked;
+            const keepOriginal = document.getElementById('keepOriginal').checked;
 
             if (!periodCol) {
                 showAlert('Please select a period column', 'error');
@@ -1299,18 +1220,13 @@
 
             setTimeout(() => {
                 processedData = [];
-                formatCounts = {};
                 let successCount = 0;
-                let errorCount = 0;
                 let partialCount = 0;
+                let errorCount = 0;
 
                 rawData.forEach((row, index) => {
                     const periodValue = row[periodCol];
-                    const result = parseDate(periodValue, dateFormatHint);
-
-                    // Track format counts
-                    const formatKey = result.format || (result.error ? 'Error: ' + result.error : 'Unknown');
-                    formatCounts[formatKey] = (formatCounts[formatKey] || 0) + 1;
+                    const result = extractMonthYear(periodValue);
 
                     // Build new row
                     const newRow = {};
@@ -1322,14 +1238,11 @@
                         }
                     });
 
-                    // Add new columns
+                    // Add new month and year columns
                     newRow[monthColName] = result.month ? String(result.month).padStart(2, '0') : '';
                     newRow[yearColName] = result.year || '';
                     
-                    if (dayColName) {
-                        newRow[dayColName] = result.day ? String(result.day).padStart(2, '0') : '';
-                    }
-
+                    // Add Year_Month column if requested
                     if (createYearMonth) {
                         newRow['Year_Month'] = (result.year && result.month) 
                             ? `${result.year}-${String(result.month).padStart(2, '0')}` 
@@ -1337,28 +1250,27 @@
                     }
 
                     newRow['_error'] = result.error;
-                    newRow['_format'] = result.format;
                     newRow['_originalPeriod'] = periodValue;
 
-                    if (result.error && !result.year && !result.month) {
-                        errorCount++;
-                    } else if (result.error) {
+                    if (result.year && result.month) {
+                        successCount++;
+                    } else if (result.year || result.month) {
                         partialCount++;
                     } else {
-                        successCount++;
+                        errorCount++;
                     }
 
                     processedData.push(newRow);
                 });
 
                 // Store column config for results display
-                window.columnConfig = { periodCol, monthColName, yearColName, dayColName, keepOriginal, createYearMonth };
+                window.columnConfig = { periodCol, monthColName, yearColName, createYearMonth, keepOriginal };
                 
-                displayResults(successCount, errorCount, partialCount);
+                displayResults(successCount, partialCount, errorCount);
             }, 500);
         }
 
-        function displayResults(successCount, errorCount, partialCount) {
+        function displayResults(successCount, partialCount, errorCount) {
             document.getElementById('processingSection').classList.add('hidden');
             document.getElementById('resultsSection').classList.remove('hidden');
 
@@ -1373,14 +1285,14 @@
                     <p>Records processed</p>
                 </div>
                 <div class="stats-card success">
-                    <h4>Fully Parsed</h4>
+                    <h4>Successful</h4>
                     <div class="metric-value">${successCount.toLocaleString()}</div>
-                    <p>Complete extraction</p>
+                    <p>Month + Year</p>
                 </div>
                 <div class="stats-card ${partialCount > 0 ? 'warning' : 'success'}">
                     <h4>Partial</h4>
                     <div class="metric-value">${partialCount.toLocaleString()}</div>
-                    <p>Year only</p>
+                    <p>Year or Month only</p>
                 </div>
                 <div class="stats-card ${errorCount > 0 ? 'warning' : 'success'}">
                     <h4>Errors</h4>
@@ -1394,26 +1306,10 @@
                 </div>
             `;
 
-            // Display format breakdown
-            const formatHtml = Object.entries(formatCounts)
-                .sort((a, b) => b[1] - a[1])
-                .map(([format, count]) => {
-                    const pct = ((count / totalRows) * 100).toFixed(1);
-                    const isError = format.startsWith('Error');
-                    return `
-                        <div style="display: flex; justify-content: space-between; padding: 6px 10px; background: ${isError ? '#f8d7da' : '#e7f3ff'}; border-radius: 4px; margin-bottom: 4px;">
-                            <span style="color: ${isError ? '#721c24' : '#004080'};">${format}</span>
-                            <span style="font-weight: 700;">${count.toLocaleString()} (${pct}%)</span>
-                        </div>
-                    `;
-                }).join('');
-            
-            document.getElementById('formatStats').innerHTML = formatHtml;
-
             // Generate preview table
             generatePreviewTable();
 
-            showAlert(`Processing complete! ${successCount} fully parsed, ${partialCount} partial, ${errorCount} errors.`, 
+            showAlert(`Processing complete! ${successCount} rows parsed successfully, ${partialCount} partial, ${errorCount} errors.`, 
                 errorCount > 0 ? 'info' : 'success');
         }
 
@@ -1424,36 +1320,37 @@
             // Get display columns (exclude internal columns)
             const displayCols = Object.keys(processedData[0] || {}).filter(col => !col.startsWith('_'));
             
+            // Identify new columns
+            const newCols = [config.monthColName, config.yearColName];
+            if (config.createYearMonth) newCols.push('Year_Month');
+            
             let html = '<thead><tr><th>#</th>';
             displayCols.forEach(col => {
                 // Highlight new columns
-                const isNew = col === config.monthColName || col === config.yearColName || 
-                             col === config.dayColName || col === 'Year_Month';
+                const isNew = newCols.includes(col);
                 html += `<th style="${isNew ? 'background: #28a745;' : ''}">${col}</th>`;
             });
-            html += '<th>Format</th><th>Status</th></tr></thead><tbody>';
+            html += '<th>Status</th></tr></thead><tbody>';
 
             // Show first 100 rows
             const previewRows = processedData.slice(0, 100);
             previewRows.forEach((row, index) => {
-                const hasError = row._error && !row._format;
+                const hasError = row._error === 'Cannot parse';
                 html += `<tr class="${hasError ? 'error-row' : ''}">`;
                 html += `<td>${index + 1}</td>`;
                 
                 displayCols.forEach(col => {
-                    const isNew = col === config.monthColName || col === config.yearColName || 
-                                 col === config.dayColName || col === 'Year_Month';
+                    const isNew = newCols.includes(col);
                     const style = isNew ? 'font-weight: 700; color: #004080;' : '';
                     html += `<td style="${style}">${row[col] !== undefined && row[col] !== null ? row[col] : ''}</td>`;
                 });
                 
-                html += `<td><span class="preview-badge badge-format">${row._format || '-'}</span></td>`;
-                html += `<td><span class="preview-badge ${hasError ? 'badge-error' : 'badge-success'}">${hasError ? row._error : '✓'}</span></td>`;
+                html += `<td><span class="preview-badge ${hasError ? 'badge-error' : 'badge-success'}">${hasError ? '✗' : '✓'}</span></td>`;
                 html += '</tr>';
             });
 
             if (processedData.length > 100) {
-                html += `<tr><td colspan="${displayCols.length + 3}" style="text-align: center; color: #666; font-style: italic;">
+                html += `<tr><td colspan="${displayCols.length + 2}" style="text-align: center; color: #666; font-style: italic;">
                     ... and ${processedData.length - 100} more rows (download to see all)
                 </td></tr>`;
             }
@@ -1518,28 +1415,25 @@
             processedData = null;
             availableColumns = [];
             fileName = '';
-            formatCounts = {};
             window.columnConfig = null;
 
             document.getElementById('uploadSection').classList.remove('hidden');
             document.getElementById('configSection').classList.add('hidden');
             document.getElementById('processingSection').classList.add('hidden');
             document.getElementById('resultsSection').classList.add('hidden');
+            document.getElementById('autoDetectNotice').classList.add('hidden');
             
             document.getElementById('dataFileInput').value = '';
             document.getElementById('dataFileName').textContent = '';
             document.getElementById('columnPreview').classList.add('hidden');
-            document.getElementById('formatDetection').classList.add('hidden');
             document.getElementById('alertContainer').innerHTML = '';
             
             // Reset form fields
             document.getElementById('periodColumn').innerHTML = '<option value="">-- Select Column --</option>';
             document.getElementById('monthColumnName').value = 'Month';
             document.getElementById('yearColumnName').value = 'Year';
-            document.getElementById('dayColumnName').value = '';
-            document.getElementById('dateFormat').value = 'auto';
             document.getElementById('keepOriginal').checked = true;
-            document.getElementById('createYearMonth').checked = false;
+            document.getElementById('createYearMonth').checked = true;
         }
     </script>
 </body>
