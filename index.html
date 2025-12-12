@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICF-SL Period Column Splitter - Month & Year</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            font-family: 'Oswald', Arial, sans-serif;
+            color: #000000;
+            font-weight: 500;
+            padding: 20px;
+        }
+
+        .page-container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background-color: #004080;
+            color: #ffffff;
+            padding: 25px 30px;
+            text-align: center;
+            margin-bottom: 15px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .logo-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 15px;
+        }
+
+        .logo-box {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-box img {
+            width: 100px;
+            height: auto;
+            border-radius: 6px;
+        }
+
+        .page-header h3 {
+            margin: 12px 0 5px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #ffffff;
+        }
+
+        .page-header .tagline {
+            margin: 0;
+            font-size: 10px;
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+        .page-header h1 {
+            margin: 20px 0 10px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        .page-header .subtitle {
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .content-card {
+            border: 4px double #004080;
+            border-radius: 12px;
+            padding: 12px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .content-inner {
+            padding: 25px;
+        }
+
+        .upload-section {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 8px;
+            border: 2px dashed #004080;
+            text-align: center;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .upload-section:hover {
+            border-color: #0056b3;
+            background: #e7f3ff;
+        }
+
+        .upload-section h3 {
+            color: #004080;
+            margin-bottom: 1rem;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .upload-section p {
+            color: #000000;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            background: #004080;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 6px;
+            border: 2px solid #004080;
+            font-size: 14px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: 'Oswald', Arial, sans-serif;
+            margin-top: 1rem;
+        }
+
+        .file-input-wrapper:hover {
+            background: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .section-header {
+            background-color: #004080;
+            color: #ffffff;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-icon {
+            background: #ffffff;
+            color: #004080;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .stats-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border: 2px solid #004080;
+            transition: all 0.2s;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 64, 128, 0.2);
+        }
+
+        .stats-card h4 {
+            color: #666;
+            font-size: 11px;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .stats-card .metric-value {
+            font-size: 1.6rem;
+            color: #004080;
+            margin-bottom: 0.25rem;
+            font-weight: 700;
+        }
+
+        .stats-card p {
+            color: #666;
+            font-size: 11px;
+        }
+
+        .stats-card.warning .metric-value {
+            color: #dc3545;
+        }
+
+        .stats-card.success .metric-value {
+            color: #28a745;
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border: 2px solid #004080;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: 'Oswald', Arial, sans-serif;
+            transition: all 0.2s;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: #004080;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #004080;
+        }
+
+        .btn-secondary:hover {
+            background: #004080;
+            color: #ffffff;
+        }
+
+        .btn-gold {
+            background: #ffc107;
+            color: #000000;
+            border-color: #ffc107;
+        }
+
+        .btn-gold:hover {
+            background: #e0a800;
+            border-color: #e0a800;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: #ffffff;
+            border-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            border-color: #218838;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+        }
+
+        .alert-info {
+            background: #e7f3ff;
+            border: 2px solid #004080;
+            color: #004080;
+        }
+
+        .info-message {
+            background: #e7f3ff;
+            color: #004080;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 2px solid #004080;
+            margin: 1rem 0;
+            font-weight: 500;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: #004080;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #004080;
+            border-radius: 6px;
+            font-size: 14px;
+            background: #ffffff;
+            color: #000000;
+            font-family: 'Oswald', Arial, sans-serif;
+            font-weight: 500;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #0056b3;
+            box-shadow: 0 0 0 3px rgba(0, 64, 128, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .config-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 2px solid #004080;
+            margin: 1rem 0;
+        }
+
+        .config-card h4 {
+            color: #004080;
+            margin-bottom: 1rem;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .loading-spinner {
+            border: 4px solid #e7f3ff;
+            border-top: 4px solid #004080;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 2px solid #004080;
+        }
+
+        .feature-card h4 {
+            color: #004080;
+            margin-bottom: 1rem;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .feature-card ul {
+            color: #000000;
+            line-height: 1.8;
+            padding-left: 1.5rem;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .feature-card strong {
+            color: #004080;
+        }
+
+        .page-footer {
+            background-color: #004080;
+            color: #ffffff;
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.7;
+            font-weight: 500;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .page-footer p {
+            margin: 6px 0 0;
+            font-size: 12px;
+            color: #ffffff;
+        }
+
+        .formula-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .formula-box strong {
+            color: #856404;
+        }
+
+        .table-container {
+            max-height: 500px;
+            overflow: auto;
+            border: 2px solid #004080;
+            border-radius: 6px;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .results-table th {
+            background: #004080;
+            color: #ffffff;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+        }
+
+        .results-table td {
+            padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .results-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .results-table tr:hover {
+            background: #e7f3ff;
+        }
+
+        .results-table tr.error-row {
+            background: #f8d7da !important;
+        }
+
+        .results-table tr.error-row td {
+            color: #721c24;
+        }
+
+        .format-examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 1rem 0;
+        }
+
+        .format-tag {
+            background: #e7f3ff;
+            color: #004080;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid #004080;
+        }
+
+        .preview-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #004080;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .content-inner {
+                padding: 15px;
+            }
+            .page-header h1 {
+                font-size: 20px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="page-header">
+            <div class="logo-row">
+                <div class="logo-box">
+                    <img src="https://github.com/mohamedsillahkanu/gdp-dashboard-2/raw/6c7463b0d5c3be150aafae695a4bcbbd8aeb1499/ICF-SL.jpg" alt="ICF-SL Logo">
+                </div>
+            </div>
+            <h3>Informatics Consultancy Firm-Sierra Leone<br>(ICF-SL)</h3>
+            <p class="tagline"><em>Driving Data-Driven Solutions for Health and Development</em></p>
+            <h1>PERIOD COLUMN SPLITTER</h1>
+            <p class="subtitle">Split Period Column into Separate Month (01-12) and Year Columns</p>
+        </div>
+
+        <div class="content-card">
+            <div class="content-inner">
+
+                <!-- Alert Container -->
+                <div id="alertContainer"></div>
+
+                <!-- Upload Section -->
+                <div id="uploadSection">
+                    <div class="upload-section">
+                        <h3>📁 UPLOAD YOUR DATA FILE</h3>
+                        <p>Upload a CSV or Excel file containing a period/date column to split</p>
+                        <label class="file-input-wrapper">
+                            Choose Data File
+                            <input type="file" id="dataFileInput" accept=".csv,.xlsx,.xls">
+                        </label>
+                        <div id="dataFileName" style="margin-top: 10px; color: #28a745; font-weight: 700;"></div>
+                    </div>
+
+                    <div id="uploadProgress" class="hidden">
+                        <div class="loading-spinner"></div>
+                        <p style="text-align: center;">Processing your file...</p>
+                    </div>
+
+                    <!-- Supported Formats -->
+                    <div class="config-card">
+                        <h4>✓ Supported Period Formats</h4>
+                        <div class="format-examples">
+                            <span class="format-tag">January 2024</span>
+                            <span class="format-tag">Jan 2024</span>
+                            <span class="format-tag">Feb-2024</span>
+                            <span class="format-tag">2024-March</span>
+                            <span class="format-tag">Dec/2023</span>
+                            <span class="format-tag">APRIL 2024</span>
+                            <span class="format-tag">2024 may</span>
+                            <span class="format-tag">Sept-2023</span>
+                        </div>
+                        <p style="color: #666; font-size: 13px; margin-top: 10px;">
+                            <strong>Logic:</strong> Any 4-digit number (19xx or 20xx) is extracted as the year. 
+                            The remaining text is matched to month names (January-December or Jan-Dec) and converted to numeric format (01-12).
+                        </p>
+                    </div>
+
+                    <!-- Features Section -->
+                    <div class="section-header">
+                        <span class="section-icon">?</span>
+                        <span class="section-title">HOW IT WORKS</span>
+                    </div>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4>Step 1: Upload</h4>
+                            <ul>
+                                <li>Upload CSV or Excel file</li>
+                                <li>File is parsed automatically</li>
+                                <li>All columns are detected</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <h4>Step 2: Select Column</h4>
+                            <ul>
+                                <li>Choose the period column</li>
+                                <li>Preview sample values</li>
+                                <li>Verify correct column selected</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <h4>Step 3: Process & Export</h4>
+                            <ul>
+                                <li>Split into Month & Year</li>
+                                <li>View results in table</li>
+                                <li>Download as Excel or CSV</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configuration Section -->
+                <div id="configSection" class="hidden">
+                    <div class="section-header">
+                        <span class="section-icon">⚙</span>
+                        <span class="section-title">SELECT PERIOD COLUMN</span>
+                    </div>
+
+                    <div class="config-card">
+                        <h4>Column Selection</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="periodColumn">Period/Date Column to Split</label>
+                                <select id="periodColumn" class="form-control" onchange="previewColumnValues()">
+                                    <option value="">-- Select Column --</option>
+                                </select>
+                                <small style="color: #666; font-size: 12px;">Select the column containing period values (e.g., "January 2024", "Feb-2024")</small>
+                            </div>
+                        </div>
+                        
+                        <!-- Column Preview -->
+                        <div id="columnPreview" class="hidden" style="margin-top: 1rem;">
+                            <h4 style="color: #004080; margin-bottom: 0.5rem;">Sample Values from Selected Column:</h4>
+                            <div id="sampleValues" style="background: #e7f3ff; padding: 1rem; border-radius: 6px; font-family: monospace;"></div>
+                        </div>
+                    </div>
+
+                    <div class="config-card">
+                        <h4>Output Options</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="monthColumnName">New Month Column Name</label>
+                                <input type="text" id="monthColumnName" class="form-control" value="Month" placeholder="Month">
+                            </div>
+                            <div class="form-group">
+                                <label for="yearColumnName">New Year Column Name</label>
+                                <input type="text" id="yearColumnName" class="form-control" value="Year" placeholder="Year">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="keepOriginal" checked style="margin-right: 8px; accent-color: #004080;">
+                                Keep original period column in output
+                            </label>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 1.5rem;">
+                        <button class="btn btn-gold" onclick="processData()">⚡ Split Period Column</button>
+                        <button class="btn btn-secondary" onclick="resetAll()">Start Over</button>
+                    </div>
+                </div>
+
+                <!-- Processing Section -->
+                <div id="processingSection" class="hidden">
+                    <div class="section-header">
+                        <span class="section-icon">⏳</span>
+                        <span class="section-title">PROCESSING</span>
+                    </div>
+                    <div class="config-card" style="text-align: center;">
+                        <div class="loading-spinner"></div>
+                        <p style="margin-top: 1rem; font-weight: 700; color: #004080;">Splitting period column...</p>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div id="resultsSection" class="hidden">
+                    <div class="section-header">
+                        <span class="section-icon">✓</span>
+                        <span class="section-title">RESULTS</span>
+                    </div>
+
+                    <div class="stats-grid" id="summaryStats">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <!-- Results Table -->
+                    <div class="config-card">
+                        <h4>Processed Data Preview</h4>
+                        <div class="table-container">
+                            <table class="results-table" id="resultsTable">
+                                <!-- Populated dynamically -->
+                            </table>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin: 2rem 0;">
+                        <button class="btn btn-success" onclick="downloadExcel()">📥 Download Excel</button>
+                        <button class="btn btn-primary" onclick="downloadCSV()">📥 Download CSV</button>
+                        <button class="btn btn-secondary" onclick="backToConfig()">Change Settings</button>
+                        <button class="btn btn-secondary" onclick="resetAll()">Start Over</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <p style="margin: 0; font-weight: 700;">National Malaria Control Programme</p>
+            <p>Ministry of Health and Sanitation, Sierra Leone</p>
+            <p style="font-size: 11px;">Medical Stores Compound, Freetown, Sierra Leone</p>
+            <p style="font-size: 10px;">© 2025 Informatics Consultancy Firm-Sierra Leone (ICF-SL)</p>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let rawData = null;
+        let processedData = null;
+        let availableColumns = [];
+        let fileName = '';
+
+        // Month mapping - handles various formats
+        const monthMap = {
+            // Full names
+            'january': '01', 'february': '02', 'march': '03', 'april': '04',
+            'may': '05', 'june': '06', 'july': '07', 'august': '08',
+            'september': '09', 'october': '10', 'november': '11', 'december': '12',
+            // 3-letter abbreviations
+            'jan': '01', 'feb': '02', 'mar': '03', 'apr': '04',
+            'jun': '06', 'jul': '07', 'aug': '08',
+            'sep': '09', 'oct': '10', 'nov': '11', 'dec': '12',
+            // Additional variations
+            'sept': '09'
+        };
+
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('dataFileInput').addEventListener('change', handleFileUpload);
+        });
+
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = message;
+            
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.parentNode.removeChild(alertDiv);
+                }
+            }, 5000);
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            fileName = file.name;
+            const fileExtension = fileName.split('.').pop().toLowerCase();
+
+            document.getElementById('uploadProgress').classList.remove('hidden');
+
+            if (fileExtension === 'csv') {
+                Papa.parse(file, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        rawData = results.data;
+                        availableColumns = Object.keys(results.data[0] || {});
+                        document.getElementById('dataFileName').textContent = `✓ Loaded: ${fileName} (${results.data.length} rows, ${availableColumns.length} columns)`;
+                        document.getElementById('uploadProgress').classList.add('hidden');
+                        showConfigSection();
+                    },
+                    error: function(error) {
+                        showAlert('Error reading CSV: ' + error.message, 'error');
+                        document.getElementById('uploadProgress').classList.add('hidden');
+                    }
+                });
+            } else if (['xlsx', 'xls'].includes(fileExtension)) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, {type: 'array'});
+                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                        rawData = XLSX.utils.sheet_to_json(firstSheet);
+                        availableColumns = Object.keys(rawData[0] || {});
+                        document.getElementById('dataFileName').textContent = `✓ Loaded: ${fileName} (${rawData.length} rows, ${availableColumns.length} columns)`;
+                        document.getElementById('uploadProgress').classList.add('hidden');
+                        showConfigSection();
+                    } catch (error) {
+                        showAlert('Error reading Excel: ' + error.message, 'error');
+                        document.getElementById('uploadProgress').classList.add('hidden');
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            } else {
+                showAlert('Please upload a CSV or Excel file', 'error');
+                document.getElementById('uploadProgress').classList.add('hidden');
+            }
+        }
+
+        function showConfigSection() {
+            populateColumnSelector();
+            document.getElementById('uploadSection').classList.add('hidden');
+            document.getElementById('configSection').classList.remove('hidden');
+            showAlert(`File loaded successfully! Select the period column to split.`, 'success');
+        }
+
+        function populateColumnSelector() {
+            const select = document.getElementById('periodColumn');
+            select.innerHTML = '<option value="">-- Select Column --</option>';
+            
+            availableColumns.forEach(col => {
+                select.innerHTML += `<option value="${col}">${col}</option>`;
+            });
+
+            // Auto-select if column name matches common patterns
+            const periodPatterns = ['period', 'date', 'month', 'time', 'reporting'];
+            availableColumns.forEach(col => {
+                const colLower = col.toLowerCase();
+                if (periodPatterns.some(p => colLower.includes(p))) {
+                    select.value = col;
+                    previewColumnValues();
+                }
+            });
+        }
+
+        function previewColumnValues() {
+            const periodCol = document.getElementById('periodColumn').value;
+            const previewDiv = document.getElementById('columnPreview');
+            const sampleDiv = document.getElementById('sampleValues');
+
+            if (!periodCol) {
+                previewDiv.classList.add('hidden');
+                return;
+            }
+
+            // Get unique sample values (up to 10)
+            const uniqueValues = [...new Set(rawData.map(row => row[periodCol]).filter(v => v))].slice(0, 10);
+            
+            let html = '<div style="display: flex; flex-wrap: wrap; gap: 10px;">';
+            uniqueValues.forEach(val => {
+                const result = extractMonthYear(val);
+                const statusClass = result.error ? 'badge-error' : 'badge-success';
+                const statusText = result.error ? `Error: ${result.error}` : `→ ${result.month}/${result.year}`;
+                
+                html += `
+                    <div style="background: #fff; padding: 8px 12px; border-radius: 6px; border: 1px solid #ddd;">
+                        <strong>${val}</strong><br>
+                        <span class="preview-badge ${statusClass}">${statusText}</span>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            sampleDiv.innerHTML = html;
+            previewDiv.classList.remove('hidden');
+        }
+
+        function extractMonthYear(period) {
+            if (!period || String(period).trim() === '') {
+                return { month: '', year: '', error: 'Empty value' };
+            }
+
+            const original = String(period).trim();
+            const text = original.toLowerCase();
+
+            // Extract 4-digit year
+            const yearMatch = text.match(/\b(19|20)\d{2}\b/);
+            if (!yearMatch) {
+                return { month: '', year: '', error: 'No valid year found' };
+            }
+            const year = yearMatch[0];
+
+            // Remove the year and any separators to get the month part
+            let monthPart = text
+                .replace(year, '')
+                .replace(/[-\/\\,.\s]+/g, ' ')
+                .trim();
+
+            // Try to find month
+            let month = '';
+            
+            // Check against month map - try longest matches first
+            const sortedKeys = Object.keys(monthMap).sort((a, b) => b.length - a.length);
+            for (const key of sortedKeys) {
+                if (monthPart.includes(key)) {
+                    month = monthMap[key];
+                    break;
+                }
+            }
+
+            if (!month) {
+                return { month: '', year: year, error: 'Month not recognized' };
+            }
+
+            return { month, year, error: null };
+        }
+
+        function processData() {
+            const periodCol = document.getElementById('periodColumn').value;
+            const monthColName = document.getElementById('monthColumnName').value || 'Month';
+            const yearColName = document.getElementById('yearColumnName').value || 'Year';
+            const keepOriginal = document.getElementById('keepOriginal').checked;
+
+            if (!periodCol) {
+                showAlert('Please select a period column', 'error');
+                return;
+            }
+
+            // Show processing
+            document.getElementById('configSection').classList.add('hidden');
+            document.getElementById('processingSection').classList.remove('hidden');
+
+            setTimeout(() => {
+                processedData = [];
+                let successCount = 0;
+                let errorCount = 0;
+
+                rawData.forEach((row, index) => {
+                    const periodValue = row[periodCol];
+                    const result = extractMonthYear(periodValue);
+
+                    // Build new row
+                    const newRow = {};
+                    
+                    // Add all original columns except period column (if not keeping)
+                    availableColumns.forEach(col => {
+                        if (keepOriginal || col !== periodCol) {
+                            newRow[col] = row[col];
+                        }
+                    });
+
+                    // Add new month and year columns
+                    newRow[monthColName] = result.month;
+                    newRow[yearColName] = result.year;
+                    newRow['_error'] = result.error;
+                    newRow['_originalPeriod'] = periodValue;
+
+                    if (result.error) {
+                        errorCount++;
+                    } else {
+                        successCount++;
+                    }
+
+                    processedData.push(newRow);
+                });
+
+                // Store column config for results display
+                window.columnConfig = { periodCol, monthColName, yearColName, keepOriginal };
+                
+                displayResults(successCount, errorCount);
+            }, 500);
+        }
+
+        function displayResults(successCount, errorCount) {
+            document.getElementById('processingSection').classList.add('hidden');
+            document.getElementById('resultsSection').classList.remove('hidden');
+
+            const totalRows = processedData.length;
+            const successRate = totalRows > 0 ? ((successCount / totalRows) * 100).toFixed(1) : 0;
+
+            // Display summary stats
+            document.getElementById('summaryStats').innerHTML = `
+                <div class="stats-card">
+                    <h4>Total Rows</h4>
+                    <div class="metric-value">${totalRows.toLocaleString()}</div>
+                    <p>Records processed</p>
+                </div>
+                <div class="stats-card success">
+                    <h4>Successful</h4>
+                    <div class="metric-value">${successCount.toLocaleString()}</div>
+                    <p>Parsed correctly</p>
+                </div>
+                <div class="stats-card ${errorCount > 0 ? 'warning' : 'success'}">
+                    <h4>Errors</h4>
+                    <div class="metric-value">${errorCount.toLocaleString()}</div>
+                    <p>Could not parse</p>
+                </div>
+                <div class="stats-card">
+                    <h4>Success Rate</h4>
+                    <div class="metric-value">${successRate}%</div>
+                    <p>Accuracy</p>
+                </div>
+            `;
+
+            // Generate preview table
+            generatePreviewTable();
+
+            showAlert(`Processing complete! ${successCount} rows parsed successfully, ${errorCount} errors.`, 
+                errorCount > 0 ? 'info' : 'success');
+        }
+
+        function generatePreviewTable() {
+            const table = document.getElementById('resultsTable');
+            const config = window.columnConfig;
+            
+            // Get display columns (exclude internal columns)
+            const displayCols = Object.keys(processedData[0] || {}).filter(col => !col.startsWith('_'));
+            
+            let html = '<thead><tr><th>#</th>';
+            displayCols.forEach(col => {
+                // Highlight new columns
+                const isNew = col === config.monthColName || col === config.yearColName;
+                html += `<th style="${isNew ? 'background: #28a745;' : ''}">${col}</th>`;
+            });
+            html += '<th>Status</th></tr></thead><tbody>';
+
+            // Show first 100 rows
+            const previewRows = processedData.slice(0, 100);
+            previewRows.forEach((row, index) => {
+                const hasError = row._error;
+                html += `<tr class="${hasError ? 'error-row' : ''}">`;
+                html += `<td>${index + 1}</td>`;
+                
+                displayCols.forEach(col => {
+                    const isNew = col === config.monthColName || col === config.yearColName;
+                    const style = isNew ? 'font-weight: 700; color: #004080;' : '';
+                    html += `<td style="${style}">${row[col] !== undefined && row[col] !== null ? row[col] : ''}</td>`;
+                });
+                
+                html += `<td><span class="preview-badge ${hasError ? 'badge-error' : 'badge-success'}">${hasError || '✓ OK'}</span></td>`;
+                html += '</tr>';
+            });
+
+            if (processedData.length > 100) {
+                html += `<tr><td colspan="${displayCols.length + 2}" style="text-align: center; color: #666; font-style: italic;">
+                    ... and ${processedData.length - 100} more rows (download to see all)
+                </td></tr>`;
+            }
+
+            html += '</tbody>';
+            table.innerHTML = html;
+        }
+
+        function downloadExcel() {
+            // Prepare export data (exclude internal columns)
+            const exportData = processedData.map(row => {
+                const newRow = {};
+                Object.keys(row).forEach(key => {
+                    if (!key.startsWith('_')) {
+                        newRow[key] = row[key];
+                    }
+                });
+                return newRow;
+            });
+
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Split Period Data');
+            
+            const outputName = fileName.replace(/\.[^/.]+$/, '') + '_split.xlsx';
+            XLSX.writeFile(wb, outputName);
+            
+            showAlert('Excel file downloaded!', 'success');
+        }
+
+        function downloadCSV() {
+            // Prepare export data (exclude internal columns)
+            const exportData = processedData.map(row => {
+                const newRow = {};
+                Object.keys(row).forEach(key => {
+                    if (!key.startsWith('_')) {
+                        newRow[key] = row[key];
+                    }
+                });
+                return newRow;
+            });
+
+            const csv = Papa.unparse(exportData);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            
+            const outputName = fileName.replace(/\.[^/.]+$/, '') + '_split.csv';
+            link.download = outputName;
+            link.click();
+            
+            showAlert('CSV file downloaded!', 'success');
+        }
+
+        function backToConfig() {
+            document.getElementById('resultsSection').classList.add('hidden');
+            document.getElementById('configSection').classList.remove('hidden');
+        }
+
+        function resetAll() {
+            rawData = null;
+            processedData = null;
+            availableColumns = [];
+            fileName = '';
+            window.columnConfig = null;
+
+            document.getElementById('uploadSection').classList.remove('hidden');
+            document.getElementById('configSection').classList.add('hidden');
+            document.getElementById('processingSection').classList.add('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+            
+            document.getElementById('dataFileInput').value = '';
+            document.getElementById('dataFileName').textContent = '';
+            document.getElementById('columnPreview').classList.add('hidden');
+            document.getElementById('alertContainer').innerHTML = '';
+            
+            // Reset form fields
+            document.getElementById('periodColumn').innerHTML = '<option value="">-- Select Column --</option>';
+            document.getElementById('monthColumnName').value = 'Month';
+            document.getElementById('yearColumnName').value = 'Year';
+            document.getElementById('keepOriginal').checked = true;
+        }
+    </script>
+</body>
+</html>
