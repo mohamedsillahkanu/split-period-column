@@ -890,8 +890,8 @@
                     skipEmptyLines: true,
                     complete: function(results) {
                         rawData = results.data;
-                        availableColumns = Object.keys(results.data[0] || {});
-                        document.getElementById('dataFileName').textContent = `✓ Loaded: ${fileName} (${results.data.length} rows, ${availableColumns.length} columns)`;
+                        availableColumns = getAllColumnsFromData(rawData);
+                        document.getElementById('dataFileName').textContent = `✓ Loaded: ${fileName} (${rawData.length} rows, ${availableColumns.length} columns)`;
                         document.getElementById('uploadProgress').classList.add('hidden');
                         showConfigSection();
                     },
@@ -908,7 +908,7 @@
                         const workbook = XLSX.read(data, {type: 'array'});
                         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
                         rawData = XLSX.utils.sheet_to_json(firstSheet, {raw: false});
-                        availableColumns = Object.keys(rawData[0] || {});
+                        availableColumns = getAllColumnsFromData(rawData);
                         document.getElementById('dataFileName').textContent = `✓ Loaded: ${fileName} (${rawData.length} rows, ${availableColumns.length} columns)`;
                         document.getElementById('uploadProgress').classList.add('hidden');
                         showConfigSection();
@@ -924,11 +924,34 @@
             }
         }
 
+        /**
+         * Extract ALL unique columns from entire dataset
+         * Handles cases where first row is empty or missing columns
+         */
+        function getAllColumnsFromData(data) {
+            const columnSet = new Set();
+            
+            // Scan all rows to capture every column that exists
+            data.forEach((row, index) => {
+                if (row && typeof row === 'object') {
+                    Object.keys(row).forEach(col => {
+                        // Only add non-empty column names
+                        if (col && String(col).trim() !== '') {
+                            columnSet.add(col);
+                        }
+                    });
+                }
+            });
+            
+            // Convert set to sorted array for consistent ordering
+            return Array.from(columnSet).sort();
+        }
+
         function showConfigSection() {
             populateColumnSelector();
             document.getElementById('uploadSection').classList.add('hidden');
             document.getElementById('configSection').classList.remove('hidden');
-            showAlert(`File loaded successfully with ${rawData.length} rows.`, 'success');
+            showAlert(`File loaded successfully with ${rawData.length} rows and ${availableColumns.length} columns.`, 'success');
         }
 
         function populateColumnSelector() {
